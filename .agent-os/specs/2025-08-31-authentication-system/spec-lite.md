@@ -1,0 +1,3 @@
+# Spec Summary (Lite)
+
+Implement a secure admin authentication system for /app/* routes using JWE tokens, OWASP-compliant password policies, and email-verified password resets. This system will enable secure admin access and user management for the domain management SaaS tool, providing session management, role-based access control, and comprehensive security measures against common authentication vulnerabilities.
