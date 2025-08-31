@@ -7,15 +7,15 @@ These are the tasks to be completed for the spec detailed in @.agent-os/specs/20
 
 ## Tasks
 
-- [ ] 1. Database Schema and Core Security Infrastructure
-  - [ ] 1.1 Write tests for database schema migrations and user model validation
-  - [ ] 1.2 Create users table with required fields (id, email, password_hash, created_at, updated_at)
-  - [ ] 1.3 Create password_reset_tokens table with expiration tracking
-  - [ ] 1.4 Implement OWASP-compliant password hashing with bcrypt/argon2
-  - [ ] 1.5 Set up jose library for JWE token creation and validation
-  - [ ] 1.6 Create user model with password verification methods
-  - [ ] 1.7 Configure database connection for Cloudflare Workers environment
-  - [ ] 1.8 Verify all database and security infrastructure tests pass
+- [x] 1. Database Schema and Core Security Infrastructure
+  - [x] 1.1 Write tests for database schema migrations and user model validation
+  - [x] 1.2 Create users table with required fields (id, email, password_hash, created_at, updated_at)
+  - [x] 1.3 Create password_reset_tokens table with expiration tracking
+  - [x] 1.4 Implement OWASP-compliant password hashing with PBKDF2-SHA256 (Web Crypto API)
+  - [x] 1.5 Set up jose library for JWE token creation and validation
+  - [x] 1.6 Create user model with password verification methods
+  - [x] 1.7 Configure database connection for Cloudflare Workers environment
+  - [x] 1.8 Verify all database and security infrastructure tests pass
 
 - [ ] 2. Stateless JWE Token System
   - [ ] 2.1 Write tests for JWE token generation, validation, and expiration

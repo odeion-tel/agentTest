@@ -44,6 +44,7 @@ Global tech stack defaults for Agent OS projects, overridable in project-specifi
 - Tests: Run before deployment
 - Hono Testing: Vitest with @cloudflare/vitest-pool-workers
 - Deployment / DevOps : Wrangler (Cloudflare CLI)
+- pnpm over npm
 
 - Production Environment: main branch
 - Staging Environment: staging branch

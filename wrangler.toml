@@ -1,0 +1,26 @@
+name = "conversionware-domain-manager"
+main = "src/index.ts"
+compatibility_date = "2024-08-31"
+compatibility_flags = ["nodejs_compat"]
+
+[env.production]
+name = "conversionware-domain-manager-prod"
+
+[env.staging]
+name = "conversionware-domain-manager-staging"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "conversionware-db"
+database_id = "placeholder-id"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "placeholder-id"
+preview_id = "placeholder-preview-id"
+
+[vars]
+ENVIRONMENT = "development"
+
+# Enable Node.js compatibility for crypto operations
+compatibility_flags = [ "nodejs_compat" ]
