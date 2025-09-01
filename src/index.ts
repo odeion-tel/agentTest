@@ -1,12 +1,18 @@
 import { Hono } from 'hono'
 import { create_database } from './db/connection'
+import { auth } from './routes/auth'
+import admin from './routes/admin'
 
 // Environment interface for Cloudflare Workers
 export interface Env {
   DB: D1Database
   KV: KVNamespace
+  RATE_LIMIT_KV: KVNamespace
   ENVIRONMENT: string
   JWT_SECRET?: string
+  MAILGUN_API_KEY?: string
+  MAILGUN_DOMAIN?: string
+  FROM_EMAIL?: string
 }
 
 const app = new Hono<{ Bindings: Env }>()
@@ -40,5 +46,11 @@ app.get('/health', async (c) => {
     }, 503)
   }
 })
+
+// Mount auth routes
+app.route('/app', auth)
+
+// Mount admin routes
+app.route('/admin', admin)
 
 export default app

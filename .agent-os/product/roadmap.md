@@ -1,8 +1,8 @@
 # Product Roadmap
 
-> Last Updated: 2025-08-31
+> Last Updated: 2025-09-01
 > Version: 1.0.0
-> Status: Planning
+> Status: In Progress
 
 ## Phase 1: Core MVP Foundation (6-8 weeks)
 
@@ -21,8 +21,9 @@
   - ✅ Database schema with users and password reset tokens 
   - ✅ OWASP-compliant password hashing (PBKDF2-SHA256)
   - ✅ Secure token generation and validation
-  - 🔄 Admin login/logout functionality (Next: Task 2-3)
-  - 🔄 Session management with Cloudflare Workers (Next: Task 2)
+  - ✅ Admin login/logout functionality with JSX SSR pages
+  - ✅ Session management with Cloudflare Workers
+  - ✅ Authentication routes with CSRF protection and rate limiting
   - 🔄 Password reset capabilities (Next: Task 4)
 
 - **Domain Management Interface** *(L - 2 weeks)*
