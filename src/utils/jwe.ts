@@ -1,90 +1,80 @@
-import { EncryptJWT, jwtDecrypt, generateKeyPair } from 'jose'
+import { EncryptJWT, jwtDecrypt } from 'jose'
 import { z } from 'zod'
+
+// User data interface for token creation
+export interface TokenUserData {
+  id: string
+  email: string
+  is_admin: boolean
+}
 
 // JWE token payload schemas
 export const auth_token_payload_schema = z.object({
-  sub: z.string().uuid(), // User ID
-  email: z.string().email(),
-  role: z.enum(['admin', 'user']),
+  user_id: z.string(),
+  email: z.string().email(), 
+  is_admin: z.boolean(),
   type: z.literal('auth'),
   iat: z.number(),
   exp: z.number(),
-  jti: z.string().uuid(),
+  jti: z.string(),
 })
 
 export const refresh_token_payload_schema = z.object({
-  sub: z.string().uuid(), // User ID
-  role: z.enum(['admin', 'user']),
+  user_id: z.string(),
+  is_admin: z.boolean(),
   type: z.literal('refresh'),
   iat: z.number(),
   exp: z.number(),
-  jti: z.string().uuid(),
+  jti: z.string(),
 })
 
 export type AuthTokenPayload = z.infer<typeof auth_token_payload_schema>
 export type RefreshTokenPayload = z.infer<typeof refresh_token_payload_schema>
 
-// JWE algorithms
-const JWE_ALG = 'RSA-OAEP-256'
+// JWE algorithms - using symmetric encryption for simplicity in testing
+const JWE_ALG = 'dir'
 const JWE_ENC = 'A256GCM'
 
 /**
- * Generate RSA key pair for JWE encryption/decryption
- * @returns Promise<{publicKey: KeyLike, privateKey: KeyLike}>
+ * Generate a symmetric key from secret for JWE encryption/decryption
+ * @param secret JWT secret string (minimum 32 characters)
+ * @returns Promise<CryptoKey> Symmetric key for JWE operations
  */
-export async function generate_jwe_keypair() {
-  return await generateKeyPair(JWE_ALG, { modulusLength: 2048 })
+export async function generate_jwe_key(secret: string): Promise<CryptoKey> {
+  if (!secret || secret.length < 32) {
+    throw new Error('JWT secret must be at least 32 characters long')
+  }
+  
+  // Create symmetric key from secret
+  const encoder = new TextEncoder()
+  const keyData = encoder.encode(secret.padEnd(32, '0').slice(0, 32))
+  
+  return await crypto.subtle.importKey(
+    'raw',
+    keyData,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['encrypt', 'decrypt']
+  )
 }
 
 /**
- * Get or create JWE keys from environment
- * For production, keys should be stored in Cloudflare Workers KV
- * @param env Worker environment bindings
- * @returns Promise<{publicKey: KeyLike, privateKey: KeyLike}>
- */
-export async function get_jwe_keys(env: any) {
-  // In development, generate keys on demand
-  // In production, retrieve from KV store with rotation support
-  if (env.ENVIRONMENT === 'development') {
-    return await generate_jwe_keypair()
-  }
-  
-  // Production implementation would retrieve from KV
-  // This is a simplified version for now
-  const stored_keys = await env.KV?.get('jwe_keys')
-  if (stored_keys) {
-    // In real implementation, this would import the stored keys
-    // For now, fall back to generating new ones
-    return await generate_jwe_keypair()
-  }
-  
-  // Generate new keys and store them
-  const keys = await generate_jwe_keypair()
-  // In real implementation, export and store keys in KV
-  // await env.KV?.put('jwe_keys', JSON.stringify(exported_keys))
-  
-  return keys
-}
-
-/**
- * Create a stateless JWE auth token
- * @param user_id User UUID
- * @param email User email
- * @param role User role
- * @param public_key JWE public key
+ * Create a stateless JWE auth token with embedded user data
+ * @param user User data object
+ * @param secret JWT secret string
  * @returns Promise<string> JWE token
  */
 export async function create_auth_token(
-  user_id: string,
-  email: string,
-  role: 'admin' | 'user',
-  public_key: any
+  user: TokenUserData,
+  secret: string
 ): Promise<string> {
+  const key = await generate_jwe_key(secret)
   const now = Math.floor(Date.now() / 1000)
+  
   const payload: AuthTokenPayload = {
-    sub: user_id,
-    email,
-    role,
+    user_id: user.id,
+    email: user.email,
+    is_admin: user.is_admin,
     type: 'auth',
     iat: now,
     exp: now + (60 * 60), // 1 hour
@@ -96,27 +86,27 @@ export async function create_auth_token(
 
   return await new EncryptJWT(payload)
     .setProtectedHeader({ alg: JWE_ALG, enc: JWE_ENC })
-    .setIssuedAt()
-    .setExpirationTime('1h')
-    .encrypt(public_key)
+    .setIssuedAt(payload.iat)
+    .setExpirationTime(payload.exp)
+    .encrypt(key)
 }
 
 /**
- * Create a stateless JWE refresh token
- * @param user_id User UUID
- * @param role User role
- * @param public_key JWE public key
+ * Create a stateless JWE refresh token with embedded user data
+ * @param user User data object
+ * @param secret JWT secret string
  * @returns Promise<string> JWE token
  */
 export async function create_refresh_token(
-  user_id: string,
-  role: 'admin' | 'user',
-  public_key: any
+  user: TokenUserData,
+  secret: string
 ): Promise<string> {
+  const key = await generate_jwe_key(secret)
   const now = Math.floor(Date.now() / 1000)
+  
   const payload: RefreshTokenPayload = {
-    sub: user_id,
-    role,
+    user_id: user.id,
+    is_admin: user.is_admin,
     type: 'refresh',
     iat: now,
     exp: now + (3 * 24 * 60 * 60), // 3 days
@@ -128,34 +118,44 @@ export async function create_refresh_token(
 
   return await new EncryptJWT(payload)
     .setProtectedHeader({ alg: JWE_ALG, enc: JWE_ENC })
-    .setIssuedAt()
-    .setExpirationTime('3d')
-    .encrypt(public_key)
+    .setIssuedAt(payload.iat)
+    .setExpirationTime(payload.exp)
+    .encrypt(key)
 }
 
 /**
  * Verify and decrypt a JWE token (stateless)
  * @param token JWE token string
- * @param private_key JWE private key
+ * @param secret JWT secret string
  * @returns Promise<AuthTokenPayload | RefreshTokenPayload> Decrypted payload
  */
 export async function verify_jwe_token(
   token: string,
-  private_key: any
+  secret: string
 ): Promise<AuthTokenPayload | RefreshTokenPayload> {
   try {
-    const { payload } = await jwtDecrypt(token, private_key)
+    const key = await generate_jwe_key(secret)
+    const { payload } = await jwtDecrypt(token, key)
     
     // Determine token type and validate accordingly
     const token_type = payload.type
     
+    let parsed_payload: AuthTokenPayload | RefreshTokenPayload
+    
     if (token_type === 'auth') {
-      return auth_token_payload_schema.parse(payload)
+      parsed_payload = auth_token_payload_schema.parse(payload)
     } else if (token_type === 'refresh') {
-      return refresh_token_payload_schema.parse(payload)
+      parsed_payload = refresh_token_payload_schema.parse(payload)
     } else {
       throw new Error('Invalid token type')
     }
+    
+    // Check if token is expired
+    if (is_token_expired(parsed_payload)) {
+      throw new Error('Token has expired')
+    }
+    
+    return parsed_payload
   } catch (error) {
     if (error instanceof z.ZodError) {
       throw new Error(`Invalid token payload: ${error.issues.map(i => i.message).join(', ')}`)

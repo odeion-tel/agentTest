@@ -17,15 +17,15 @@ These are the tasks to be completed for the spec detailed in @.agent-os/specs/20
   - [x] 1.7 Configure database connection for Cloudflare Workers environment
   - [x] 1.8 Verify all database and security infrastructure tests pass
 
-- [ ] 2. Stateless JWE Token System
-  - [ ] 2.1 Write tests for JWE token generation, validation, and expiration
-  - [ ] 2.2 Implement JWE token creation with embedded user data (id, email, role)
-  - [ ] 2.3 Create token validation middleware for protected routes
-  - [ ] 2.4 Implement secure cookie management with HttpOnly and SameSite flags
-  - [ ] 2.5 Add token refresh logic for extended sessions
-  - [ ] 2.6 Create logout functionality with token invalidation
-  - [ ] 2.7 Handle token expiration and automatic cleanup
-  - [ ] 2.8 Verify all JWE token system tests pass
+- [x] 2. Stateless JWE Token System
+  - [x] 2.1 Write tests for JWE token generation, validation, and expiration
+  - [x] 2.2 Implement JWE token creation with embedded user data (id, email, role)
+  - [x] 2.3 Create token validation middleware for protected routes
+  - [x] 2.4 Implement secure cookie management with HttpOnly and SameSite flags
+  - [x] 2.5 Add token refresh logic for extended sessions
+  - [x] 2.6 Create logout functionality with token invalidation
+  - [x] 2.7 Handle token expiration and automatic cleanup
+  - [x] 2.8 Verify all JWE token system tests pass
 
 - [ ] 3. Authentication Routes and User Interface
   - [ ] 3.1 Write tests for login/logout routes and form validation
