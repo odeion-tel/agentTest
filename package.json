@@ -1,0 +1,31 @@
+{
+  "name": "conversionware-domain-manager",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "db:migrate": "drizzle-kit migrate",
+    "db:generate": "drizzle-kit generate",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@hono/zod-validator": "^0.2.2",
+    "@noble/hashes": "^1.5.0",
+    "drizzle-orm": "^0.33.0",
+    "hono": "^4.6.3",
+    "jose": "^4.15.4",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.5.15",
+    "@cloudflare/workers-types": "^4.20240925.0",
+    "@types/node": "^20.19.11",
+    "drizzle-kit": "^0.24.2",
+    "typescript": "^5.5.2",
+    "vitest": "^2.1.1",
+    "wrangler": "^3.78.12"
+  }
+}

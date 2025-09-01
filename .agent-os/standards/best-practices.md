@@ -13,41 +13,55 @@ ELSE:
 
 ## Core Principles
 
-### Keep It Simple
+### Clarity Over Cleverness
 
-- Implement code in the fewest lines possible
-- Avoid over-engineering solutions
-- Choose straightforward approaches over clever ones
+- Optimize for human understanding, not just fewer lines of code
+- Write code (or prompts) that a new contributor can grasp in minutes
+- Comment for "why decisions were made," not "what the code does"
 
-### Optimize for Readability
+### Problem Specification as the New Skill
 
-- Prioritize code clarity over micro-optimizations
-- Write self-documenting code with clear variable names
-- Add comments for "why" not "what"
+- Treat development as problem translation: the clearer the framing, the better the solution
+- Express goals, inputs, outputs, and constraints explicitly in natural language or structured prompts
+- Validate AI-generated code as you would a junior engineer’s work
 
-### Functional Hierachy (Data -> Calcualtions -> Actions)
+### Functional Hierarchy (Data → Transformations → Actions)
 
-- Prioritize data over functions
-- Prioritize pure functions over impure functions
+- Model data clearly first — everything flows from well-defined data
+- Prefer pure functions where possible; isolate side effects for clarity and testability
+- Keep transformations explicit to make reasoning easier
 
-### DRY (Don't Repeat Yourself)
+### Pragmatic Reuse (DRY with Judgment)
 
-- Extract repeated business logic to private methods
-- Extract repeated UI markup to reusable components
-- Create utility functions for common operations
+- Eliminate duplication when it reduces long-term maintenance risk
+- Allow some redundancy if it improves readability or avoids brittle abstractions
+- Reuse components and utilities where they clarify intent
 
-### File Structure
+### Structure for Navigation
 
-- Keep files focused on a single responsibility
-- Group related functionality together
-- Use consistent naming conventions
+- Keep files/modules focused on a single responsibility
+- Organize codebases to match how developers (and AI assistants) search for context
+- Use consistent naming conventions so purpose is inferable
 
-### Hono Best Practice
+### Human-AI Collaboration
 
-- Don't make controllers when possible
-- Use app.route() to build larger applications
-- Use JSX Renderer Middleware
-- Use Zod Validator Middleware
+- Use agentic coding tools as accelerators, not replacements
+- Pair with AI for generation, testing, and refactoring — always review outputs
+- Let AI handle repetition; reserve human focus for architecture, validation, and edge cases
+
+### Framework & Tooling (Hono Best Practice)
+
+- Minimize boilerplate; choose framework patterns that reduce friction
+- In Hono:
+  - Prefer `app.route()` for scalability
+  - Use JSX Renderer Middleware and Zod Validator Middleware where appropriate
+  - Avoid unnecessary controllers
+
+### Documentation as a Living System
+
+- Generate and consolidate docs continuously with AI assistance
+- Store tribal knowledge in CLAUDE.md (or equivalent) for easy ingestion
+- Treat documentation as an interface — anyone should understand workflows quickly
 
   </conditional-block>
 
@@ -63,15 +77,13 @@ ELSE:
 
 ## Dependencies
 
-### Choose Libraries Wisely
+### Dependency Discipline
 
 When adding third-party dependencies:
 
-- Select the most popular and actively maintained option
-- Check the library's GitHub repository for:
-  - Recent commits (within last 6 months)
-  - Active issue resolution
-  - Number of stars/downloads
-  - Clear documentation
-  - Do NOT use React, Angular, or Vue.
-    </conditional-block>
+- Dependencies are long-term commitments — add them sparingly
+- Favor actively maintained, well-documented, and widely used libraries
+- Prefer small, composable packages over monolithic frameworks
+- Do NOT use React, Angular, or Vue
+
+  </conditional-block>
