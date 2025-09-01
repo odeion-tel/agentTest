@@ -8,6 +8,7 @@ These are the tasks to be completed for the spec detailed in @.agent-os/specs/20
 ## Tasks
 
 - [x] 1. Database Schema and Core Security Infrastructure
+
   - [x] 1.1 Write tests for database schema migrations and user model validation
   - [x] 1.2 Create users table with required fields (id, email, password_hash, created_at, updated_at)
   - [x] 1.3 Create password_reset_tokens table with expiration tracking
@@ -18,6 +19,7 @@ These are the tasks to be completed for the spec detailed in @.agent-os/specs/20
   - [x] 1.8 Verify all database and security infrastructure tests pass
 
 - [x] 2. Stateless JWE Token System
+
   - [x] 2.1 Write tests for JWE token generation, validation, and expiration
   - [x] 2.2 Implement JWE token creation with embedded user data (id, email, role)
   - [x] 2.3 Create token validation middleware for protected routes
@@ -28,6 +30,7 @@ These are the tasks to be completed for the spec detailed in @.agent-os/specs/20
   - [x] 2.8 Verify all JWE token system tests pass
 
 - [ ] 3. Authentication Routes and User Interface
+
   - [ ] 3.1 Write tests for login/logout routes and form validation
   - [ ] 3.2 Create JSX SSR login page with OWASP password requirements
   - [ ] 3.3 Implement login POST route with rate limiting and CSRF protection
@@ -38,6 +41,7 @@ These are the tasks to be completed for the spec detailed in @.agent-os/specs/20
   - [ ] 3.8 Verify all authentication route tests pass
 
 - [ ] 4. Password Reset Flow
+
   - [ ] 4.1 Write tests for password reset request, validation, and completion
   - [ ] 4.2 Create JSX SSR forgot password form with email input
   - [ ] 4.3 Implement password reset request route with email verification
